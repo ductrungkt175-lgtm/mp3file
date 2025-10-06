@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Phát MP3 tự động</title>
+</head>
+<body>
+  <h2>Phát file MP3 tự động</h2>
+  <p id="info"></p>
+
+  <audio id="player" autoplay muted playsinline>
+    <source id="source" type="audio/mpeg">
+    Trình duyệt của bạn không hỗ trợ phát audio.
+  </audio>
+
+  <script>
+    // Lấy tên file từ URL (ví dụ: ?file=he.mp3)
+    const params = new URLSearchParams(window.location.search);
+    const file = params.get("file");
+
+    const info = document.getElementById("info");
+    const source = document.getElementById("source");
+    const player = document.getElementById("player");
+
+    if (file) {
+      source.src = "mp3file/" + file;
+      info.textContent = "Đang phát: " + file;
+      player.load();
+
+      // Trick tự bật tiếng sau khi autoplay muted được phép
+      player.play().then(() => {
+        setTimeout(() => {
+          player.muted = false;
+        }, 300);
+      }).catch(err => {
+        console.warn("Trình duyệt chặn autoplay:", err);
+      });
+    } else {
+      info.textContent = "Vui lòng thêm ?file=tên_file.mp3 vào URL.";
+    }
+  </script>
+</body>
+</html>
